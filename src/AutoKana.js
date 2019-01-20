@@ -22,7 +22,7 @@ function isHiragana(char) {
 
 // eslint-disable-next-line no-irregular-whitespace
 const kanaExtractionPattern = /[^ 　ぁあ-んー]/g;
-const kanaCompactingPattern = /[ぁぃぅぇぉっゃゅょ]/g;
+// const kanaCompactingPattern = /[ぁぃぅぇぉっゃゅょ]/g;
 
 export default class AutoKana {
   /**
@@ -208,7 +208,7 @@ export default class AutoKana {
     if (Math.abs(this.values.length - newValues.length) > 1) {
       const tmpValues = newValues
         .join('')
-        .replace(kanaCompactingPattern, '')
+        .replace(/[ぁぃぅぇぉっゃゅょ]/, '')
         .split('');
       if (Math.abs(this.values.length - tmpValues.length) > 1) {
         this.onConvert();
