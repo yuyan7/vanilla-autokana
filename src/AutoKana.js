@@ -207,10 +207,12 @@ export default class AutoKana {
 
     if (Math.abs(this.values.length - newValues.length) > 1) {
       const tmpValues = newValues
+        .reverse()
         .join('')
-        .replace(/[ぁぃぅぇぉっゃゅょ]/, '')
+        .replace(kanaCompactingPattern, '')
         .split('');
-      if (Math.abs(this.values.length - tmpValues.length) > 1) {
+      newValues.reverse();
+      if (Math.abs(this.values.length - tmpValues.length) > 2) {
         this.onConvert();
       }
     } else if (
