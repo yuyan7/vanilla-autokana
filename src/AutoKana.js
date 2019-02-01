@@ -20,9 +20,92 @@ function isHiragana(char) {
   return (c >= 12353 && c <= 12435) || c === 12445 || c === 12446;
 }
 
+function hebonG(s) {
+  let src = s;
+  src = src.replace(/ん([aiueoy])/g, 'n$1');
+  src = src.replace(/ん/g, 'n');
+  src = src.replace(/n([bpm])/g, 'm$1');
+
+  src = src.replace(/si/g, 'shi');
+  src = src.replace(/ti/g, 'chi');
+  src = src.replace(/tu/g, 'tsu');
+  src = src.replace(/zi/g, 'ji');
+  src = src.replace(/hu/g, 'fu');
+  src = src.replace(/di/g, 'ji');
+  src = src.replace(/du/g, 'zu');
+
+  src = src.replace(/sy([auo])/g, 'sh$1');
+  src = src.replace(/ty([auo])/g, 'ch$1');
+  src = src.replace(/zy([auo])/g, 'j$1');
+
+  const hebonGMap = {
+    'kuぁ': 'kua', 'kuぃ': 'kui', 'kuぇ': 'kue', 'kuぉ': 'kuo',
+    'guぁ': 'gua', 'guぃ': 'gui', 'guぇ': 'gue', 'guぉ': 'guo',
+    'fuぁ': 'fua', 'fuぃ': 'fui', 'fuぇ': 'fue', 'fuぉ': 'fuo', 'fuょ': 'fuyo',
+    'ゔぁ': 'bua', 'ゔぃ': 'bui', 'ゔぇ': 'bue', 'ゔぉ': 'buo', 'ゔ': 'bu', 
+    'tsuぁ': 'tsua', 'tsuぃ': 'tsui', 'tsuぇ': 'tsue', 'tsuぉ': 'tsuo',
+
+    'deぃ': 'dei', 'deゅ': 'deyu', 'doぅ': 'dou',
+    'uぃ': 'ui', 'uぇ': 'ue', 'uぉ': 'uo',
+
+    'iぇ': 'ie', 'jiぇ': 'jie', 'chiぇ': 'chie', 'teぃ': 'tei',
+  };
+
+  Object.keys(hebonGMap).forEach(key => {
+    const reg = new RegExp(key, 'g');
+    src = src.replace(reg, hebonGMap[key]);
+  });
+
+  src = src.replace(/aー/g, 'a');
+  src = src.replace(/iー/g, 'i');
+  src = src.replace(/u[ーu]/g, 'u');
+  src = src.replace(/eー/g, 'e');
+  src = src.replace(/o[ーu]/g, 'o');
+  src = src.replace(/oo([a-z])/g, 'o$1');
+
+  src = src.replace(/っch/g, 'tch');
+  src = src.replace(/っ([kstnhmyrwgzdbp])/g, '$1$1');
+
+  return src;
+}
+
 // eslint-disable-next-line no-irregular-whitespace
 const kanaExtractionPattern = /[^ 　ぁあ-んー]/g;
-// const kanaCompactingPattern = /[ぁぃぅぇぉっゃゅょ]/g;
+const kanaCompactingPattern = /[ぁぃぅぇぉっゃゅょ]/g;
+const romajiBaseMap = {
+  'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+  'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+  'さ': 'sa', 'し': 'si', 'す': 'su', 'せ': 'se', 'そ': 'so',
+  'た': 'ta', 'ち': 'ti', 'つ': 'tu', 'て': 'te', 'と': 'to',
+  'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
+  'は': 'ha', 'ひ': 'hi', 'ふ': 'hu', 'へ': 'he', 'ほ': 'ho',
+  'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
+  'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+  'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
+  'わ': 'wa', 'ゐ': 'i', 'ゑ': 'e', 'を': 'wo',
+
+  'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
+  'ざ': 'za', 'じ': 'zi', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
+  'だ': 'da', 'ぢ': 'di', 'づ': 'du', 'で': 'de', 'ど': 'do',
+  'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+  'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po',
+
+  'きゃ': 'kya', 'きゅ': 'kyu', 'きょ': 'kyo',
+  'しゃ': 'sya', 'しゅ': 'syu', 'しょ': 'syo',
+  'ちゃ': 'tya', 'ちゅ': 'tyu', 'ちょ': 'tyo',
+  'にゃ': 'nya', 'にゅ': 'nyu', 'にょ': 'nyo',
+  'ひゃ': 'hya', 'ひゅ': 'hyu', 'ひょ': 'hyo',
+  'みゃ': 'mya', 'みゅ': 'myu', 'みょ': 'myo',
+  'りゃ': 'rya', 'りゅ': 'ryu', 'りょ': 'ryo',
+
+  'ぎゃ': 'gya', 'ぎゅ': 'gyu', 'ぎょ': 'gyo',
+  'じゃ': 'zya', 'じゅ': 'zyu', 'じょ': 'zyo',
+  'ぢゃ': 'dya', 'ぢゅ': 'dyu', 'ぢょ': 'dyo',
+  'びゃ': 'bya', 'びゅ': 'byu', 'びょ': 'byo',
+  'ぴゃ': 'pya', 'ぴゅ': 'pyu', 'ぴょ': 'pyo',
+
+  '、': ', ', '。': '. ', '　': ' ',
+};
 
 export default class AutoKana {
   /**
@@ -38,6 +121,7 @@ export default class AutoKana {
     this.option = Object.assign(
       {
         katakana: false,
+        roman: false,
         debug: false,
         checkInterval: 30, // milli seconds
       },
@@ -157,6 +241,24 @@ export default class AutoKana {
         }
       }
       return str;
+    } else if (this.option.roman) {
+      let romaji = '';
+      for (let i = 0; i < src.length; i += 1) {
+        const k = src.substr(i, 2);
+        let r = romajiBaseMap[k];
+        if (r) {
+          i += 1;
+          romaji += r;
+          continue;
+        }
+        r = romajiBaseMap[k[0]];
+        if (r) {
+          romaji += r;
+          continue;
+        }
+        romaji += k[0];
+      }
+      return hebonG(romaji);
     }
     return src;
   }
@@ -207,12 +309,13 @@ export default class AutoKana {
 
     if (Math.abs(this.values.length - newValues.length) > 1) {
       const tmpValues = newValues
-        .reverse()
         .join('')
         .replace(kanaCompactingPattern, '')
         .split('');
-      newValues.reverse();
-      if (Math.abs(this.values.length - tmpValues.length) > 2) {
+      if (
+        Math.abs(newValues.length - tmpValues.length) < 2 &&
+        Math.abs(this.values.length - tmpValues.length) > 1
+      ) {
         this.onConvert();
       }
     } else if (

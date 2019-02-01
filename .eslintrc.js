@@ -7,7 +7,8 @@ module.exports = {
     'prettier',
   ],
   rules: {
-    'prettier/prettier': ['error']
+    'prettier/prettier': ['error'],
+    'no-continue': 'off'
   },
   env: {
     browser: true,
