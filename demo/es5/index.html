@@ -58,8 +58,12 @@
 <script src="../../dist/autokana.js" defer></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    AutoKana.bind("#name", "#furigana", { debug: true });
-    AutoKana.bind("#name", "#roman", { debug: true, roman: true });
+    AutoKana.bind("#name", "#furigana", { debug: false });
+    AutoKana.bind("#name", "#roman", { debug: false, roman: true });
+    const autokana = AutoKana.bind("#name");
+    setInterval(() => {
+        console.log(autokana.getFurigana());
+    }, 1000);
   });
 </script>
 </body>

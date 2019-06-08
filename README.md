@@ -36,6 +36,8 @@ npm i vanilla-autokana # or yarn add vanilla-autokana
     AutoKana.bind("#name", "#furigana");
     // ↓ふりがなをカタカナで入力したい場合
     // AutoKana.bind("#name", "#furigana", { katakana: true });
+    // ↓ふりがなをローマ字で入力したい場合
+    // AutoKana.bind("#name", "#furigana", { roman: true });
   });
 </script>
 ```
